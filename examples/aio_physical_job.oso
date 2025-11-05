@@ -1,0 +1,67 @@
+{
+  "name": "aio_physical_job",
+  "orisa": "eshu_router",
+  "attributes": {
+    "job": {
+      "type": "physical",
+      "title": "Warehouse Package Delivery",
+      "budget": 5000,
+      "requires": "drone_pilot_license"
+    },
+    "ase": {
+      "proof": "qr",
+      "witnesses": 3,
+      "qr": true,
+      "auto_device": true
+    },
+    "sector": {
+      "name": "logistics"
+    },
+    "collaboration": {
+      "actors": ["drone_001", "witness_mesh", "customer"],
+      "roles": ["pilot", "verifier", "recipient"]
+    },
+    "delivery": {
+      "id": "DEL_001",
+      "uri": "ar://package_tracking",
+      "checksum": "a4f2b8c3d9e1f5a7b2c8d4e9f1a3b5c7d2e4f6a8b1c3d5e7f9a2b4c6d8e1f3a5",
+      "state": "in_transit"
+    },
+    "tithe": {
+      "rate": 369,
+      "wallet": "tech_gnosis_treasury"
+    }
+  },
+  "args": {
+    "action": "deliver_package",
+    "package_id": "PKG_12345",
+    "from": "warehouse_A",
+    "to": "customer_B"
+  },
+  "statements": [
+    {
+      "type": "call",
+      "data": {
+        "function": "scan_qr_checkpoint"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "broadcast_to_witness_mesh"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "complete_delivery"
+      }
+    },
+    {
+      "type": "return",
+      "data": {
+        "value": "delivery_verified_witnesses_confirmed"
+      }
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "name": "simaas_robot_test",
+  "orisa": "ogun_forge",
+  "attributes": {
+    "sim": {
+      "episode_id": 1,
+      "steps": 1000
+    },
+    "hardware": {
+      "estop_check": true
+    },
+    "accountability": {
+      "metric": "who_drove_what"
+    },
+    "compute": {
+      "gpu": "h100",
+      "hours": 2,
+      "provider": "runpod"
+    },
+    "safety": {
+      "id": "safety_001",
+      "items": ["estop", "collision_detect"],
+      "signedByVisa": "ogun_safety_council"
+    }
+  },
+  "args": {
+    "robot": "unitree_h1",
+    "task": "navigation_test"
+  },
+  "statements": [
+    {
+      "type": "call",
+      "data": {
+        "function": "initialize_simulation"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "run_navigation_episode"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "collect_telemetry"
+      }
+    },
+    {
+      "type": "return",
+      "data": {
+        "value": "simulation_complete_ready_for_aio"
+      }
+    }
+  ]
+}

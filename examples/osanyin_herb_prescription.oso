@@ -1,0 +1,62 @@
+{
+  "name": "osanyin_herb_prescription",
+  "orisa": "osanyin_herb",
+  "attributes": {
+    "herb": {
+      "key": "cerasee",
+      "class": "ONCO"
+    },
+    "regional": {
+      "locale": "DO-Santiago"
+    },
+    "veil": {
+      "constant": "φ"
+    },
+    "oracle": {
+      "query": "ifa_divination_cerasee_potency"
+    },
+    "ai": {
+      "policy": "herb_interaction_check"
+    },
+    "review": {
+      "witness": 2
+    }
+  },
+  "args": {
+    "prescription": "detox_protocol",
+    "patient_id": "P_001",
+    "duration_days": 21
+  },
+  "statements": [
+    {
+      "type": "call",
+      "data": {
+        "function": "validate_regional_availability"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "check_herb_interactions"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "calculate_golden_ratio_dosage"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "witness_review_approval"
+      }
+    },
+    {
+      "type": "return",
+      "data": {
+        "value": "prescription_sealed_with_ase"
+      }
+    }
+  ]
+}

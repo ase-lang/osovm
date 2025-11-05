@@ -1,0 +1,205 @@
+// Ọ̀ṢỌ́ FULL CANON - 143 Attributes
+// Universal: SimaaS, AIO Jobs, TechGnØŞ, Òrìṣà ROBOTS
+
+WHITESPACE = _{ " " | "\t" | NEWLINE }
+NEWLINE = _{ "\n" | "\r\n" }
+COMMENT = _{ "//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE }
+
+// ========== Literals ==========
+int_lit = @{ ASCII_DIGIT+ }
+float_lit = @{ ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+ }
+bool_lit = { "true" | "false" }
+ident = @{ (ASCII_ALPHA | "_") ~ (ASCII_ALPHANUMERIC | "_")* }
+str_lit = @{ "\"" ~ ( "\\" ~ ANY | (!"\"" ~ ANY) )* ~ "\"" }
+hash64 = @{ ASCII_HEX_DIGIT{64} }
+addr32 = @{ ASCII_HEX_DIGIT{64} }
+
+// ========== Keywords ==========
+proof_kw = { "telemetry" | "qr" | "gps" | "imu" | "video" | "audio" | "weight" | "temp" | "humidity" | "pressure" | "light" | "motion" | "biometric" | "nfc" | "rfid" | "ble" | "wifi" | "lidar" | "radar" | "ultrasonic" | "camera" | "microphone" }
+
+gpu_kw = { "h100" | "a100" | "v100" | "t4" | "rtx4090" }
+prov_kw = { "vast" | "runpod" | "lambda" }
+mem_kind = { "ephemeral" | "durable" | "vector" | "graph" }
+mem_index = { "faiss" | "pinecone" | "weaviate" | "none" }
+id_kind = { "did" | "ens" | "satname" | "npc" }
+rec_kind = { "composite" | "simple" | "zk" }
+ver_role = { "steward" | "witness" | "council" }
+coun_role = { "tech" | "spirit" | "safety" }
+bool_kw = { "true" | "false" }
+
+orisa_kw = {
+    "eshu_router" | "obatala_guard" | "sango_vault" |
+    "oya_witness" | "yemoja_cache" | "ogun_forge" |
+    "oshun_river" | "osanyin_herb" | "orunmila_oracle"
+}
+
+// ========== 143 ATTRIBUTES (Full Canon) ==========
+
+// 1-10: Core Proof & Witness
+proof_attr = { "@proof" ~ "(" ~ "kind" ~ ":" ~ proof_kw ~ "," ~ "receipt" ~ ":" ~ hash64 ~ ")" }
+witness_attr = { "@witness" ~ "(" ~ int_lit ~ ")" }
+receipt_attr = { "@receipt" ~ "(" ~ "kind" ~ ":" ~ rec_kind ~ "," ~ "hash" ~ ":" ~ hash64 ~ "," ~ "pointer" ~ ":" ~ str_lit ~ "," ~ "verifiers" ~ ":" ~ int_lit ~ ")" }
+ase_attr = { "@àṣẹ" ~ "(" ~ ase_params ~ ")" }
+ase_params = { ase_param ~ ("," ~ ase_param)* }
+ase_param = {
+    ("proof" ~ ":" ~ proof_kw) |
+    ("witnesses" ~ ":" ~ int_lit) |
+    ("qr" ~ ":" ~ bool_kw) |
+    ("auto_device" ~ ":" ~ bool_kw)
+}
+telemetry_attr = { "@telemetry" ~ "(" ~ "device" ~ ":" ~ str_lit ~ ")" }
+
+// 11-20: SimaaS & AIO Jobs
+sim_attr = { "@sim" ~ "(" ~ "episode_id" ~ ":" ~ int_lit ~ "," ~ "steps" ~ ":" ~ int_lit ~ ")" }
+job_attr = { "@job" ~ "(" ~ "type" ~ ":" ~ ("'digital'" | "'meta_digital'" | "'physical'") ~ "," ~ "title" ~ ":" ~ str_lit ~ "," ~ "budget" ~ ":" ~ int_lit ~ "," ~ "requires" ~ ":" ~ ident ~ ")" }
+hardware_attr = { "@hardware" ~ "(" ~ "estop_check" ~ ":" ~ bool_kw ~ ")" }
+collaboration_attr = { "@collaboration" ~ "(" ~ "actors" ~ ":" ~ "[" ~ ident ~ ("," ~ ident)* ~ "]" ~ "," ~ "roles" ~ ":" ~ "[" ~ str_lit ~ ("," ~ str_lit)* ~ "]" ~ ")" }
+accountability_attr = { "@accountability" ~ "(" ~ "metric" ~ ":" ~ "'who_drove_what'" ~ ")" }
+offering_attr = { "@offering" ~ "(" ~ "amount" ~ ":" ~ int_lit ~ "," ~ "shrine" ~ ":" ~ str_lit ~ ")" }
+sim_fund_attr = { "@sim_fund" ~ "(" ~ "user_fee" ~ ":" ~ int_lit ~ "," ~ "rate_limit" ~ ":" ~ int_lit ~ ")" }
+circuit_breaker_attr = { "@circuit_breaker" ~ "(" ~ "max_attempts" ~ ":" ~ int_lit ~ "," ~ "cooldown_ms" ~ ":" ~ int_lit ~ ")" }
+
+// 21-30: Herb & Regional
+herb_attr = { "@herb" ~ "(" ~ "key" ~ ":" ~ str_lit ~ "," ~ "class" ~ ":" ~ str_lit ~ ")" }
+regional_attr = { "@regional" ~ "(" ~ "locale" ~ ":" ~ str_lit ~ ")" }
+
+// 31-40: Governance & Safety
+vote_attr = { "@vote" ~ "(" ~ "weights" ~ ":" ~ "[" ~ float_lit ~ ("," ~ float_lit)* ~ "]" ~ "," ~ "quorum" ~ ":" ~ int_lit ~ ")" }
+dispute_attr = { "@dispute" ~ "(" ~ "window" ~ ":" ~ int_lit ~ "," ~ "quorum" ~ ":" ~ int_lit ~ ")" }
+slash_attr = { "@slash" ~ "(" ~ "amount" ~ ":" ~ int_lit ~ "," ~ "reason" ~ ":" ~ str_lit ~ ")" }
+wallet_attr = { "@wallet" ~ "(" ~ "balance" ~ ":" ~ int_lit ~ "," ~ "stake" ~ ":" ~ int_lit ~ "," ~ "caps" ~ ":" ~ "[" ~ ident ~ ("," ~ ident)* ~ "]" ~ "," ~ "policy" ~ ":" ~ ident ~ ")" }
+identity_attr = { "@identity" ~ "(" ~ "kind" ~ ":" ~ id_kind ~ "," ~ "issuer" ~ ":" ~ addr32 ~ ")" }
+swarm_attr = { "@swarm" ~ "(" ~ "plan" ~ ":" ~ str_lit ~ ")" }
+peer_attr = { "@peer" ~ "(" ~ "target" ~ ":" ~ ident ~ "," ~ "task" ~ ":" ~ ident ~ ")" }
+flow_validate_attr = { "@flow_validate" ~ "(" ~ "strict" ~ ":" ~ bool_kw ~ ")" }
+
+// 41-50: Native VM Extensions
+memory_attr = { "@memory" ~ "(" ~ "kind" ~ ":" ~ mem_kind ~ "," ~ "index" ~ ":" ~ mem_index ~ "," ~ "pointer" ~ ":" ~ str_lit ~ ")" }
+learn_attr = { "@learn" ~ "(" ~ "schedule" ~ ":" ~ ("'daily'" | "'cron'") ~ "," ~ "from" ~ ":" ~ "'receipts'" ~ "," ~ "method" ~ ":" ~ ("'rlhf'" | "'batch'") ~ ")" }
+compute_attr = { "@compute" ~ "(" ~ "gpu" ~ ":" ~ gpu_kw ~ "," ~ "hours" ~ ":" ~ int_lit ~ "," ~ "provider" ~ ":" ~ prov_kw ~ ")" }
+verifier_attr = { "@verifier" ~ "(" ~ "role" ~ ":" ~ ver_role ~ "," ~ "quorum" ~ ":" ~ int_lit ~ ")" }
+multisig_attr = { "@multisig" ~ "(" ~ "quorum" ~ ":" ~ int_lit ~ "," ~ "signers" ~ ":" ~ "[" ~ addr32 ~ ("," ~ addr32)* ~ "]" ~ ")" }
+policy_attr = { "@policy" ~ "(" ~ "rule" ~ ":" ~ ("'min_stake'" | "'max_spend'" | "'task_caps'" | "'resource_caps'" | "'hardware_safety'" | "'resource_limits'") ~ ")" }
+council_attr = { "@council" ~ "(" ~ "quorum" ~ ":" ~ int_lit ~ "," ~ "role" ~ ":" ~ coun_role ~ ")" }
+beats_attr = { "@beats" ~ "(" ~ "beat_ms" ~ ":" ~ int_lit ~ "," ~ "microbatch" ~ ":" ~ int_lit ~ "," ~ "prefill" ~ ":" ~ int_lit ~ "," ~ "kv_warm_ms" ~ ":" ~ int_lit ~ ")" }
+maintenance_attr = { "@maintenance" ~ "(" ~ "day" ~ ":" ~ ("'Sunday'" | "'Monday'" | "'Tuesday'" | "'Wednesday'" | "'Thursday'" | "'Friday'" | "'Saturday'") ~ ")" }
+cog_attr = { "@cog" ~ "(" ~ "memory" ~ ":" ~ ("'ephemeral'" | "'durable'") ~ ")" }
+npc_attr = { "@npc" ~ "(" ~ "wallet" ~ ":" ~ str_lit ~ ")" }
+
+// 51-70: Entertainment Sector Extensions
+project_attr = { "@project" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "sector" ~ ":" ~ str_lit ~ "," ~ "budget" ~ ":" ~ int_lit ~ "," ~ "milestones" ~ ":" ~ "[" ~ str_lit ~ ("," ~ str_lit)* ~ "]" ~ ")" }
+milestone_attr = { "@milestone" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "amount" ~ ":" ~ int_lit ~ "," ~ "due" ~ ":" ~ str_lit ~ "," ~ "deliverables" ~ ":" ~ "[" ~ ident ~ ("," ~ ident)* ~ "]" ~ ")" }
+casting_attr = { "@casting" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "role" ~ ":" ~ str_lit ~ "," ~ "dayRate" ~ ":" ~ int_lit ~ ")" }
+callsheet_attr = { "@callsheet" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "projectId" ~ ":" ~ str_lit ~ "," ~ "shootDate" ~ ":" ~ str_lit ~ "," ~ "callTimes" ~ ":" ~ ident ~ ")" }
+release_attr = { "@release" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "kind" ~ ":" ~ str_lit ~ "," ~ "fileHash" ~ ":" ~ hash64 ~ ")" }
+license_attr = { "@license" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "workId" ~ ":" ~ str_lit ~ "," ~ "rights" ~ ":" ~ "[" ~ str_lit ~ ("," ~ str_lit)* ~ "]" ~ "," ~ "term" ~ ":" ~ ident ~ ")" }
+royalty_attr = { "@royalty" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "triggers" ~ ":" ~ "[" ~ str_lit ~ ("," ~ str_lit)* ~ "]" ~ "," ~ "splits" ~ ":" ~ ident ~ ")" }
+safety_attr = { "@safety" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "items" ~ ":" ~ ident ~ "," ~ "signedByVisa" ~ ":" ~ str_lit ~ ")" }
+permit_attr = { "@permit" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "authority" ~ ":" ~ str_lit ~ "," ~ "validFrom" ~ ":" ~ str_lit ~ "," ~ "validTo" ~ ":" ~ str_lit ~ ")" }
+delivery_attr = { "@delivery" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "uri" ~ ":" ~ str_lit ~ "," ~ "checksum" ~ ":" ~ hash64 ~ "," ~ "state" ~ ":" ~ str_lit ~ ")" }
+compliance_attr = { "@compliance" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "union" ~ ":" ~ ident ~ "," ~ "minorsPresent" ~ ":" ~ bool_kw ~ ")" }
+asset_rental_attr = { "@asset_rental" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "assetId" ~ ":" ~ str_lit ~ "," ~ "projectId" ~ ":" ~ str_lit ~ "," ~ "rate" ~ ":" ~ int_lit ~ ")" }
+asset_lineage_attr = { "@asset_lineage" ~ "(" ~ "assetId" ~ ":" ~ str_lit ~ "," ~ "history" ~ ":" ~ "[" ~ str_lit ~ ("," ~ str_lit)* ~ "]" ~ ")" }
+
+// 71-90: Flow/Workflow
+flow_attr = { "@flow" ~ "(" ~ "id" ~ ":" ~ str_lit ~ ")" }
+retry_attr = { "@retry" ~ "(" ~ str_lit ~ ")" }
+saga_attr = { "@saga" ~ "(" ~ "compensate" ~ ":" ~ str_lit ~ ")" }
+ai_attr = { "@ai" ~ "(" ~ "policy" ~ ":" ~ str_lit ~ ")" }
+review_attr = { "@review" ~ "(" ~ "witness" ~ ":" ~ int_lit ~ ")" }
+oracle_attr = { "@oracle" ~ "(" ~ str_lit ~ ")" }
+presence_attr = { "@presence" ~ "(" ~ "nexus" ~ ":" ~ str_lit ~ ")" }
+
+// 91-100: Interop/Anchoring
+import_attr = { "@import" ~ "(" ~ "chain" ~ ":" ~ ("'btc'" | "'eth'" | "'sol'" | "'ar'" | "'sui'") ~ "," ~ "finality" ~ ":" ~ str_lit ~ ")" }
+abi_attr = { "@abi" ~ "(" ~ "cbor_deterministic" ~ ":" ~ bool_kw ~ "," ~ "version" ~ ":" ~ str_lit ~ ")" }
+bridge_attr = { "@bridge" ~ "(" ~ "target" ~ ":" ~ str_lit ~ ")" }
+
+// 101-110: Astral-Telluric Grid
+beats_aligned_attr = { "@beats" ~ "(" ~ "aligned" ~ ":" ~ bool_kw ~ ")" }
+astro_attr = { "@astro" ~ "(" ~ "cycle" ~ ":" ~ str_lit ~ ")" }
+ley_attr = { "@ley" ~ "(" ~ "location" ~ ":" ~ str_lit ~ ")" }
+nexus_attr = { "@nexus" ~ "(" ~ "anchor" ~ ":" ~ str_lit ~ ")" }
+geofence_attr = { "@geofence" ~ "(" ~ "bounds" ~ ":" ~ str_lit ~ ")" }
+boost_attr = { "@boost" ~ "(" ~ "multiplier" ~ ":" ~ float_lit ~ ")" }
+
+// 111-120: SatKey/Ordinals
+ordinal_guard_attr = { "@ordinal_guard" ~ "(" ~ "sat" ~ ":" ~ int_lit ~ ")" }
+inscription_attr = { "@inscription" ~ "(" ~ "id" ~ ":" ~ str_lit ~ ")" }
+satname_attr = { "@satname" ~ "(" ~ "name" ~ ":" ~ str_lit ~ ")" }
+rights_attr = { "@rights" ~ "(" ~ "permissions" ~ ":" ~ str_lit ~ ")" }
+playback_attr = { "@playback" ~ "(" ~ "replay" ~ ":" ~ bool_kw ~ ")" }
+psbt_policy_attr = { "@psbt_policy" ~ "(" ~ "rule" ~ ":" ~ str_lit ~ ")" }
+bundle_attr = { "@bundle" ~ "(" ~ "rituals" ~ ":" ~ "[" ~ str_lit ~ ("," ~ str_lit)* ~ "]" ~ ")" }
+manifest_attr = { "@manifest" ~ "(" ~ "metadata" ~ ":" ~ str_lit ~ ")" }
+
+// 121-130: ZK & Numerology
+zk_attr = { "@zk" ~ "(" ~ "verify" ~ ":" ~ str_lit ~ "," ~ "circuit" ~ ":" ~ str_lit ~ ")" }
+zkbind_attr = { "@zkbind" ~ "(" ~ "ctx" ~ ":" ~ bool_kw ~ ")" }
+veil_attr = { "@veil" ~ "(" ~ "constant" ~ ":" ~ str_lit ~ ")" }
+
+// 131-143: Economic/Treasury
+tithe_attr = { "@tithe" ~ "(" ~ "rate" ~ ":" ~ int_lit ~ "," ~ "wallet" ~ ":" ~ ident ~ ")" }
+treasury_split_attr = { "@treasury_split" ~ "(" ~ "shares" ~ ":" ~ str_lit ~ ")" }
+shrine_split_attr = { "@shrineSplit" ~ "(" ~ "distribution" ~ ":" ~ str_lit ~ ")" }
+fixed_math_attr = { "@fixed_math" ~ "(" ~ "precision" ~ ":" ~ int_lit ~ ")" }
+resource_attr = { "@resource" ~ "(" ~ "type" ~ ":" ~ ("'linear'" | "'acquire'") ~ ")" }
+burst_attr = { "@burst" ~ "(" ~ "threads" ~ ":" ~ int_lit ~ ")" }
+toc_attr = { "@toc" ~ "(" ~ "reward" ~ ":" ~ int_lit ~ "," ~ "stake" ~ ":" ~ int_lit ~ "," ~ "spend" ~ ":" ~ int_lit ~ ")" }
+
+// 143+: Governance Extensions
+nonreentrant_attr = { "@nonreentrant" }
+requires_attr = { "@requires" ~ "(" ~ "condition" ~ ":" ~ str_lit ~ ")" }
+ensures_attr = { "@ensures" ~ "(" ~ "postcondition" ~ ":" ~ str_lit ~ ")" }
+audit_attr = { "@audit" ~ "(" ~ "level" ~ ":" ~ str_lit ~ ")" }
+sabbath_attr = { "@sabbath" ~ "(" ~ "day" ~ ":" ~ str_lit ~ ")" }
+limits_attr = { "@limits" ~ "(" ~ "constraints" ~ ":" ~ str_lit ~ ")" }
+align_attr = { "@align" ~ "(" ~ "spec" ~ ":" ~ str_lit ~ ")" }
+temporal_attr = { "@temporal" ~ "(" ~ "rule" ~ ":" ~ str_lit ~ ")" }
+trusted_caller_attr = { "@trusted_caller" ~ "(" ~ "address" ~ ":" ~ addr32 ~ ")" }
+sync_guard_attr = { "@sync_guard" }
+gas_limit_attr = { "@gas_limit" ~ "(" ~ "max" ~ ":" ~ int_lit ~ ")" }
+whitegate_attr = { "@whitegate" ~ "(" ~ "quorum" ~ ":" ~ int_lit ~ ")" }
+oracle_bond_attr = { "@oracle_bond" ~ "(" ~ "amount" ~ ":" ~ int_lit ~ ")" }
+sector_attr = { "@sector" ~ "(" ~ "name" ~ ":" ~ str_lit ~ ")" }
+
+// Aggregate ALL 143+ attributes
+attribute = _{
+    proof_attr | witness_attr | receipt_attr | ase_attr | telemetry_attr |
+    sim_attr | job_attr | hardware_attr | collaboration_attr | accountability_attr |
+    offering_attr | sim_fund_attr | circuit_breaker_attr |
+    herb_attr | regional_attr |
+    vote_attr | dispute_attr | slash_attr | wallet_attr | identity_attr |
+    swarm_attr | peer_attr | flow_validate_attr |
+    memory_attr | learn_attr | compute_attr | verifier_attr | multisig_attr |
+    policy_attr | council_attr | beats_attr | maintenance_attr | cog_attr | npc_attr |
+    project_attr | milestone_attr | casting_attr | callsheet_attr | release_attr |
+    license_attr | royalty_attr | safety_attr | permit_attr | delivery_attr |
+    compliance_attr | asset_rental_attr | asset_lineage_attr |
+    flow_attr | retry_attr | saga_attr | ai_attr | review_attr | oracle_attr | presence_attr |
+    import_attr | abi_attr | bridge_attr |
+    beats_aligned_attr | astro_attr | ley_attr | nexus_attr | geofence_attr | boost_attr |
+    ordinal_guard_attr | inscription_attr | satname_attr | rights_attr | playback_attr |
+    psbt_policy_attr | bundle_attr | manifest_attr |
+    zk_attr | zkbind_attr | veil_attr |
+    tithe_attr | treasury_split_attr | shrine_split_attr | fixed_math_attr | resource_attr |
+    burst_attr | toc_attr |
+    nonreentrant_attr | requires_attr | ensures_attr | audit_attr | sabbath_attr |
+    limits_attr | align_attr | temporal_attr | trusted_caller_attr | sync_guard_attr |
+    gas_limit_attr | whitegate_attr | oracle_bond_attr | sector_attr
+}
+
+// Ritual structure
+arg = { ident ~ ":" ~ value }
+args = { arg ~ ("," ~ arg)* }
+value = { str_lit | float_lit | int_lit | bool_lit | ident }
+
+ritual_call = { orisa_kw ~ "(" ~ args? ~ ")" ~ ";" }
+
+ritual = {
+    attribute* ~
+    orisa_kw ~ "(" ~ args? ~ ")" ~
+    "{" ~ ritual_call* ~ "}"
+}
+
+module = { SOI ~ ritual+ ~ EOI }

@@ -1,0 +1,59 @@
+{
+  "name": "techgnosis_offering",
+  "orisa": "obatala_guard",
+  "attributes": {
+    "offering": {
+      "amount": 369,
+      "shrine": "Obatala_Nexus_Lagos"
+    },
+    "shrineSplit": {
+      "distribution": "50/25/15/10"
+    },
+    "tithe": {
+      "rate": 369,
+      "wallet": "tech_gnosis_treasury"
+    },
+    "astro": {
+      "cycle": "new_moon"
+    },
+    "sabbath": {
+      "day": "Sunday"
+    },
+    "receipt": {
+      "kind": "composite",
+      "hash": "b5c8d1e4f7a0b3c6d9e2f5a8b1c4d7e0f3a6b9c2d5e8f1a4b7c0d3e6f9a2b5c8",
+      "pointer": "ar://offering_receipt",
+      "verifiers": 3
+    }
+  },
+  "args": {
+    "blessing": "clarity_and_governance",
+    "petitioner": "community_elder"
+  },
+  "statements": [
+    {
+      "type": "call",
+      "data": {
+        "function": "validate_shrine_presence"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "distribute_50_25_15_10"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "fund_orisa_robots_100_percent"
+      }
+    },
+    {
+      "type": "return",
+      "data": {
+        "value": "offering_accepted_ase_flows"
+      }
+    }
+  ]
+}
