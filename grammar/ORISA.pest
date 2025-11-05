@@ -1,0 +1,50 @@
+// Ọ̀ṢỌ́ Phase 1 Grammar - Ritual Programming Language
+// Focus: Proof-of-Ritual with Telemetry and Witness Handshake
+
+WHITESPACE = _{ " " | "\t" | NEWLINE }
+NEWLINE = _{ "\n" | "\r\n" }
+COMMENT = _{ "//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE }
+
+// Literals
+int_lit = @{ ASCII_DIGIT+ }
+bool_lit = { "true" | "false" }
+ident = @{ (ASCII_ALPHA | "_") ~ (ASCII_ALPHANUMERIC | "_")* }
+str_lit = @{ "\"" ~ ( "\\" ~ ANY | (!"\"" ~ ANY) )* ~ "\"" }
+
+// Proof types for Phase 1
+proof_kind = { "telemetry" | "qr_scan" | "gps" | "sensor" }
+
+// Core Òrìṣà keywords (Phase 1 subset)
+orisa_kw = {
+    "eshu_router" |
+    "obatala_guard" |
+    "sango_vault" |
+    "oya_witness"
+}
+
+// Phase 1 Attributes (simplified)
+ase_attr = { "@àṣẹ" ~ "(" ~ "proof" ~ ":" ~ proof_kind ~ "," ~ "witnesses" ~ ":" ~ int_lit ~ ")" }
+telemetry_attr = { "@telemetry" ~ "(" ~ "device" ~ ":" ~ str_lit ~ ")" }
+witness_attr = { "@witness" ~ "(" ~ "network" ~ ":" ~ str_lit ~ ")" }
+
+attribute = _{ ase_attr | telemetry_attr | witness_attr }
+
+// Ritual arguments
+arg = { ident ~ ":" ~ value }
+args = { arg ~ ("," ~ arg)* }
+
+// Values
+value = { str_lit | int_lit | bool_lit | ident }
+
+// Ritual invocation (statement)
+ritual_call = { orisa_kw ~ "(" ~ args? ~ ")" ~ ";" }
+
+// Ritual definition
+ritual = {
+    attribute* ~
+    orisa_kw ~ "(" ~ args? ~ ")" ~
+    "{" ~ ritual_call* ~ "}"
+}
+
+// Module structure
+module = { SOI ~ ritual+ ~ EOI }

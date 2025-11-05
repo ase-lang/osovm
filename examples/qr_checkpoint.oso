@@ -1,0 +1,9 @@
+// QR Checkpoint Ritual
+// Scenario: Autonomous vehicle scans QR at checkpoint, broadcasts to mesh
+// Witnesses: 2 roadside nodes confirm scan
+
+@àṣẹ(proof:qr_scan, witnesses:2)
+@telemetry(device:"av_tesla_01")
+eshu_router(action:checkpoint) {
+  obatala_guard(quorum:2);
+}

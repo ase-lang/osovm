@@ -1,0 +1,48 @@
+{
+  "name": "drone_delivery",
+  "orisa": "eshu_router",
+  "ase": {
+    "proof": "telemetry",
+    "witnesses": 3
+  },
+  "args": {
+    "action": "delivery",
+    "destination": "warehouse_b"
+  },
+  "statements": [
+    {
+      "type": "call",
+      "data": {
+        "function": "scan_qr",
+        "args": ["package_id"]
+      }
+    },
+    {
+      "type": "assign",
+      "data": {
+        "variable": "delivery_status",
+        "value": "in_transit"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "obatala_guard",
+        "args": ["quorum:3"]
+      }
+    },
+    {
+      "type": "assign",
+      "data": {
+        "variable": "delivery_status",
+        "value": "delivered"
+      }
+    },
+    {
+      "type": "return",
+      "data": {
+        "value": "delivery_complete"
+      }
+    }
+  ]
+}

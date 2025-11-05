@@ -1,0 +1,9 @@
+// Factory Robot Handoff Ritual
+// Scenario: Robot arm transfers component to AGV, verified by sensor array
+// Witnesses: 4 IoT sensors on factory floor
+
+@àṣẹ(proof:sensor, witnesses:4)
+@telemetry(device:"kuka_arm_01")
+eshu_router(action:handoff) {
+  obatala_guard(quorum:4);
+}
