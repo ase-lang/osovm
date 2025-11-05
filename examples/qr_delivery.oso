@@ -1,0 +1,48 @@
+{
+  "name": "qr_delivery",
+  "orisa": "eshu_router",
+  "ase": {
+    "proof": "qr",
+    "witnesses": 3,
+    "qr": true,
+    "auto_device": true
+  },
+  "device": {
+    "type": "drone",
+    "id": "drone_delivery_001"
+  },
+  "delivery": {
+    "from": "warehouse_A",
+    "to": "customer_B"
+  },
+  "args": {
+    "action": "delivery",
+    "package_id": "PKG_12345"
+  },
+  "statements": [
+    {
+      "type": "call",
+      "data": {
+        "function": "scan_qr_checkpoint"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "broadcast_to_witnesses"
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "obatala_guard"
+      }
+    },
+    {
+      "type": "return",
+      "data": {
+        "value": "delivery_verified_with_qr"
+      }
+    }
+  ]
+}

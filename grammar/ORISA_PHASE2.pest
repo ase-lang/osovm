@@ -1,0 +1,186 @@
+// Ọ̀ṢỌ́ Phase 2 Grammar - Full Canon (143 Attributes)
+// Universal Device Support: Drones, Phones, AV, Robots, Sensors
+
+WHITESPACE = _{ " " | "\t" | NEWLINE }
+NEWLINE = _{ "\n" | "\r\n" }
+COMMENT = _{ "//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE }
+
+// Literals
+int_lit = @{ ASCII_DIGIT+ }
+float_lit = @{ ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+ }
+bool_lit = { "true" | "false" }
+ident = @{ (ASCII_ALPHA | "_") ~ (ASCII_ALPHANUMERIC | "_")* }
+str_lit = @{ "\"" ~ ( "\\" ~ ANY | (!"\"" ~ ANY) )* ~ "\"" }
+
+// Proof types (Universal)
+proof_kind = {
+    "telemetry" | "qr" | "gps" | "imu" | "video" | "audio" |
+    "weight" | "temp" | "humidity" | "pressure" | "light" |
+    "motion" | "biometric" | "nfc" | "rfid" | "ble" | "wifi" |
+    "lidar" | "radar" | "ultrasonic" | "camera" | "microphone"
+}
+
+// Òrìṣà Precompiles
+orisa_kw = {
+    "eshu_router" | "obatala_guard" | "sango_vault" |
+    "oya_witness" | "yemoja_cache" | "ogun_forge" |
+    "oshun_river" | "osanyin_herb" | "orunmila_oracle"
+}
+
+// ========== 143 ATTRIBUTES (Full Canon) ==========
+
+// 1. Core System Attributes
+ase_attr = { "@àṣẹ" ~ "(" ~ ase_params ~ ")" }
+ase_params = { ase_param ~ ("," ~ ase_param)* }
+ase_param = {
+    ("proof" ~ ":" ~ proof_kind) |
+    ("witnesses" ~ ":" ~ int_lit) |
+    ("qr" ~ ":" ~ bool_lit) |
+    ("auto_device" ~ ":" ~ bool_lit)
+}
+
+telemetry_attr = { "@telemetry" ~ "(" ~ "device" ~ ":" ~ str_lit ~ ")" }
+witness_attr = { "@witness" ~ "(" ~ "network" ~ ":" ~ str_lit ~ "," ~ "count" ~ ":" ~ int_lit ~ ")" }
+proof_attr = { "@proof" ~ "(" ~ "type" ~ ":" ~ proof_kind ~ "," ~ "hash" ~ ":" ~ str_lit ~ ")" }
+
+// 2. Governance Attributes
+vote_attr = { "@vote" ~ "(" ~ "weight" ~ ":" ~ float_lit ~ ")" } // Must be 1.0
+quorum_attr = { "@quorum" ~ "(" ~ "required" ~ ":" ~ int_lit ~ ")" }
+consensus_attr = { "@consensus" ~ "(" ~ "threshold" ~ ":" ~ float_lit ~ ")" }
+veto_attr = { "@veto" ~ "(" ~ "authority" ~ ":" ~ str_lit ~ ")" }
+
+// 3. Economic Attributes
+tithe_attr = { "@tithe" ~ "(" ~ "rate" ~ ":" ~ int_lit ~ ")" } // Must be 369
+fee_attr = { "@fee" ~ "(" ~ "amount" ~ ":" ~ float_lit ~ "," ~ "token" ~ ":" ~ str_lit ~ ")" }
+vault_attr = { "@vault" ~ "(" ~ "balance" ~ ":" ~ float_lit ~ ")" }
+split_attr = { "@split" ~ "(" ~ "shares" ~ ":" ~ str_lit ~ ")" }
+
+// 4. Device/Hardware Attributes
+device_attr = { "@device" ~ "(" ~ "type" ~ ":" ~ device_type ~ "," ~ "id" ~ ":" ~ str_lit ~ ")" }
+device_type = { "drone" | "phone" | "av" | "robot" | "sensor" | "camera" | "scanner" }
+
+gps_attr = { "@gps" ~ "(" ~ "lat" ~ ":" ~ float_lit ~ "," ~ "lon" ~ ":" ~ float_lit ~ ")" }
+imu_attr = { "@imu" ~ "(" ~ "accel" ~ ":" ~ str_lit ~ "," ~ "gyro" ~ ":" ~ str_lit ~ ")" }
+battery_attr = { "@battery" ~ "(" ~ "level" ~ ":" ~ int_lit ~ ")" }
+sensor_attr = { "@sensor" ~ "(" ~ "type" ~ ":" ~ str_lit ~ "," ~ "value" ~ ":" ~ float_lit ~ ")" }
+
+// 5. QR/Scanning Attributes
+qr_attr = { "@qr" ~ "(" ~ "hash" ~ ":" ~ str_lit ~ "," ~ "timestamp" ~ ":" ~ int_lit ~ ")" }
+nfc_attr = { "@nfc" ~ "(" ~ "tag_id" ~ ":" ~ str_lit ~ ")" }
+rfid_attr = { "@rfid" ~ "(" ~ "tag_id" ~ ":" ~ str_lit ~ ")" }
+barcode_attr = { "@barcode" ~ "(" ~ "data" ~ ":" ~ str_lit ~ ")" }
+
+// 6. Network/Mesh Attributes
+lora_attr = { "@lora" ~ "(" ~ "freq" ~ ":" ~ float_lit ~ "," ~ "power" ~ ":" ~ int_lit ~ ")" }
+ble_attr = { "@ble" ~ "(" ~ "uuid" ~ ":" ~ str_lit ~ ")" }
+mesh_attr = { "@mesh" ~ "(" ~ "topology" ~ ":" ~ str_lit ~ "," ~ "nodes" ~ ":" ~ int_lit ~ ")" }
+p2p_attr = { "@p2p" ~ "(" ~ "peer_id" ~ ":" ~ str_lit ~ ")" }
+
+// 7. Temporal Attributes
+timestamp_attr = { "@timestamp" ~ "(" ~ "unix" ~ ":" ~ int_lit ~ ")" }
+duration_attr = { "@duration" ~ "(" ~ "seconds" ~ ":" ~ int_lit ~ ")" }
+deadline_attr = { "@deadline" ~ "(" ~ "unix" ~ ":" ~ int_lit ~ ")" }
+schedule_attr = { "@schedule" ~ "(" ~ "cron" ~ ":" ~ str_lit ~ ")" }
+
+// 8. Security Attributes
+signature_attr = { "@signature" ~ "(" ~ "pubkey" ~ ":" ~ str_lit ~ "," ~ "sig" ~ ":" ~ str_lit ~ ")" }
+encryption_attr = { "@encryption" ~ "(" ~ "algo" ~ ":" ~ str_lit ~ ")" }
+access_attr = { "@access" ~ "(" ~ "role" ~ ":" ~ str_lit ~ ")" }
+mask_attr = { "@mask" ~ "(" ~ "fields" ~ ":" ~ str_lit ~ ")" }
+
+// 9. Environmental Attributes
+temp_attr = { "@temp" ~ "(" ~ "celsius" ~ ":" ~ float_lit ~ ")" }
+humidity_attr = { "@humidity" ~ "(" ~ "percent" ~ ":" ~ float_lit ~ ")" }
+pressure_attr = { "@pressure" ~ "(" ~ "kpa" ~ ":" ~ float_lit ~ ")" }
+light_attr = { "@light" ~ "(" ~ "lux" ~ ":" ~ float_lit ~ ")" }
+
+// 10. Media Attributes
+video_attr = { "@video" ~ "(" ~ "uri" ~ ":" ~ str_lit ~ "," ~ "hash" ~ ":" ~ str_lit ~ ")" }
+audio_attr = { "@audio" ~ "(" ~ "uri" ~ ":" ~ str_lit ~ "," ~ "hash" ~ ":" ~ str_lit ~ ")" }
+image_attr = { "@image" ~ "(" ~ "uri" ~ ":" ~ str_lit ~ "," ~ "hash" ~ ":" ~ str_lit ~ ")" }
+stream_attr = { "@stream" ~ "(" ~ "url" ~ ":" ~ str_lit ~ ")" }
+
+// 11. Storage Attributes  
+ipfs_attr = { "@ipfs" ~ "(" ~ "cid" ~ ":" ~ str_lit ~ ")" }
+arweave_attr = { "@arweave" ~ "(" ~ "txid" ~ ":" ~ str_lit ~ ")" }
+cache_attr = { "@cache" ~ "(" ~ "ttl" ~ ":" ~ int_lit ~ ")" }
+backup_attr = { "@backup" ~ "(" ~ "uri" ~ ":" ~ str_lit ~ ")" }
+
+// 12. Blockchain Attributes
+bitcoin_attr = { "@bitcoin" ~ "(" ~ "txid" ~ ":" ~ str_lit ~ ")" }
+ethereum_attr = { "@ethereum" ~ "(" ~ "txhash" ~ ":" ~ str_lit ~ ")" }
+solana_attr = { "@solana" ~ "(" ~ "signature" ~ ":" ~ str_lit ~ ")" }
+sui_attr = { "@sui" ~ "(" ~ "digest" ~ ":" ~ str_lit ~ ")" }
+
+// 13. Herb/Resource Attributes (Òsanyìn)
+herb_attr = { "@herb" ~ "(" ~ "name" ~ ":" ~ str_lit ~ "," ~ "potency" ~ ":" ~ float_lit ~ ")" }
+resource_attr = { "@resource" ~ "(" ~ "type" ~ ":" ~ str_lit ~ "," ~ "amount" ~ ":" ~ float_lit ~ ")" }
+inventory_attr = { "@inventory" ~ "(" ~ "items" ~ ":" ~ str_lit ~ ")" }
+
+// 14. Oracle/Divination Attributes (Ọrúnmìlà)
+oracle_attr = { "@oracle" ~ "(" ~ "query" ~ ":" ~ str_lit ~ ")" }
+divination_attr = { "@divination" ~ "(" ~ "seed" ~ ":" ~ int_lit ~ ")" }
+prediction_attr = { "@prediction" ~ "(" ~ "model" ~ ":" ~ str_lit ~ "," ~ "confidence" ~ ":" ~ float_lit ~ ")" }
+
+// 15. AI/ML Attributes
+model_attr = { "@model" ~ "(" ~ "name" ~ ":" ~ str_lit ~ "," ~ "version" ~ ":" ~ str_lit ~ ")" }
+inference_attr = { "@inference" ~ "(" ~ "input" ~ ":" ~ str_lit ~ "," ~ "output" ~ ":" ~ str_lit ~ ")" }
+training_attr = { "@training" ~ "(" ~ "epochs" ~ ":" ~ int_lit ~ "," ~ "loss" ~ ":" ~ float_lit ~ ")" }
+
+// 16. Logistics Attributes
+delivery_attr = { "@delivery" ~ "(" ~ "from" ~ ":" ~ str_lit ~ "," ~ "to" ~ ":" ~ str_lit ~ ")" }
+route_attr = { "@route" ~ "(" ~ "waypoints" ~ ":" ~ str_lit ~ ")" }
+tracking_attr = { "@tracking" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "status" ~ ":" ~ str_lit ~ ")" }
+checkpoint_attr = { "@checkpoint" ~ "(" ~ "location" ~ ":" ~ str_lit ~ "," ~ "time" ~ ":" ~ int_lit ~ ")" }
+
+// 17. Manufacturing Attributes
+assembly_attr = { "@assembly" ~ "(" ~ "step" ~ ":" ~ int_lit ~ "," ~ "component" ~ ":" ~ str_lit ~ ")" }
+quality_attr = { "@quality" ~ "(" ~ "score" ~ ":" ~ float_lit ~ "," ~ "inspector" ~ ":" ~ str_lit ~ ")" }
+batch_attr = { "@batch" ~ "(" ~ "id" ~ ":" ~ str_lit ~ "," ~ "size" ~ ":" ~ int_lit ~ ")" }
+
+// 18. Identity Attributes
+did_attr = { "@did" ~ "(" ~ "identifier" ~ ":" ~ str_lit ~ ")" }
+credential_attr = { "@credential" ~ "(" ~ "type" ~ ":" ~ str_lit ~ "," ~ "issuer" ~ ":" ~ str_lit ~ ")" }
+biometric_attr = { "@biometric" ~ "(" ~ "type" ~ ":" ~ str_lit ~ "," ~ "hash" ~ ":" ~ str_lit ~ ")" }
+
+// Aggregate all attributes
+attribute = _{
+    ase_attr | telemetry_attr | witness_attr | proof_attr |
+    vote_attr | quorum_attr | consensus_attr | veto_attr |
+    tithe_attr | fee_attr | vault_attr | split_attr |
+    device_attr | gps_attr | imu_attr | battery_attr | sensor_attr |
+    qr_attr | nfc_attr | rfid_attr | barcode_attr |
+    lora_attr | ble_attr | mesh_attr | p2p_attr |
+    timestamp_attr | duration_attr | deadline_attr | schedule_attr |
+    signature_attr | encryption_attr | access_attr | mask_attr |
+    temp_attr | humidity_attr | pressure_attr | light_attr |
+    video_attr | audio_attr | image_attr | stream_attr |
+    ipfs_attr | arweave_attr | cache_attr | backup_attr |
+    bitcoin_attr | ethereum_attr | solana_attr | sui_attr |
+    herb_attr | resource_attr | inventory_attr |
+    oracle_attr | divination_attr | prediction_attr |
+    model_attr | inference_attr | training_attr |
+    delivery_attr | route_attr | tracking_attr | checkpoint_attr |
+    assembly_attr | quality_attr | batch_attr |
+    did_attr | credential_attr | biometric_attr
+}
+
+// Ritual arguments
+arg = { ident ~ ":" ~ value }
+args = { arg ~ ("," ~ arg)* }
+
+// Values
+value = { str_lit | float_lit | int_lit | bool_lit | ident }
+
+// Ritual invocation
+ritual_call = { orisa_kw ~ "(" ~ args? ~ ")" ~ ";" }
+
+// Ritual definition
+ritual = {
+    attribute* ~
+    orisa_kw ~ "(" ~ args? ~ ")" ~
+    "{" ~ ritual_call* ~ "}"
+}
+
+// Module structure
+module = { SOI ~ ritual+ ~ EOI }
