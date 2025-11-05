@@ -1,48 +1,9 @@
-{
-  "name": "drone_delivery",
-  "orisa": "eshu_router",
-  "ase": {
-    "proof": "telemetry",
-    "witnesses": 3
-  },
-  "args": {
-    "action": "delivery",
-    "destination": "warehouse_b"
-  },
-  "statements": [
-    {
-      "type": "call",
-      "data": {
-        "function": "scan_qr",
-        "args": ["package_id"]
-      }
-    },
-    {
-      "type": "assign",
-      "data": {
-        "variable": "delivery_status",
-        "value": "in_transit"
-      }
-    },
-    {
-      "type": "call",
-      "data": {
-        "function": "obatala_guard",
-        "args": ["quorum:3"]
-      }
-    },
-    {
-      "type": "assign",
-      "data": {
-        "variable": "delivery_status",
-        "value": "delivered"
-      }
-    },
-    {
-      "type": "return",
-      "data": {
-        "value": "delivery_complete"
-      }
-    }
-  ]
+// Drone Delivery Ritual - Proof-of-Ritual Example
+// Scenario: Drone delivers package, proves via QR scan + GPS telemetry
+// Witnesses: 3 LoRa mesh nodes confirm delivery
+
+@àṣẹ(proof:telemetry, witnesses:3)
+@telemetry(device:"drone_unitree_b2")
+eshu_router(action:delivery) {
+  obatala_guard(quorum:3);
 }

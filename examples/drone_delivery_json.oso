@@ -1,0 +1,34 @@
+{
+  "name": "drone_delivery_json",
+  "orisa": "eshu_router",
+  "ase": {
+    "proof": "telemetry",
+    "witnesses": 3
+  },
+  "args": {
+    "action": "delivery",
+    "device": "drone_unitree_b2"
+  },
+  "statements": [
+    {
+      "type": "call",
+      "data": {
+        "function": "scan_qr",
+        "args": ["package_001"]
+      }
+    },
+    {
+      "type": "call",
+      "data": {
+        "function": "obatala_guard",
+        "args": ["quorum:3"]
+      }
+    },
+    {
+      "type": "return",
+      "data": {
+        "value": "delivery_complete"
+      }
+    }
+  ]
+}

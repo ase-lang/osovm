@@ -264,13 +264,19 @@ func (vm *VM) executeStatement(stmt *Statement) error {
 // ========== CLI Entry Point ==========
 
 func main() {
-	if len(os.Args) < 3 {
+	// Handle Termux-specific behavior where Args[1] is the full binary path
+	argsOffset := 1
+	if len(os.Args) > 1 && os.Args[1][0] == '/' {
+		argsOffset = 2
+	}
+	
+	if len(os.Args) < argsOffset+2 {
 		fmt.Println("Usage: oso run <ritual.oso>")
 		os.Exit(1)
 	}
 
-	command := os.Args[1]
-	ritualPath := os.Args[2]
+	command := os.Args[argsOffset]
+	ritualPath := os.Args[argsOffset+1]
 
 	if command != "run" {
 		fmt.Printf("Unknown command: %s\n", command)
